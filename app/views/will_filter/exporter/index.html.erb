@@ -1,30 +1,43 @@
-<div class="clearfix">
-  <div style="border-bottom: 1px solid; " class="clearfix">
-    <h4 class="pull-left">Exporter</h4>
-    <div class="pull-right">
-      <%=link_to_function("&times;".html_safe, "wfExporter.hide()", :title=>"Close", :class => "close")%>
-    </div>
-    <div class="clearfix">&nbsp;</div>
+<div class="wf_exporter_header">
+  <div class="end" style="margin-top: -3px;">
+    <%= link_to("&times;".html_safe, "#", :onclick => "wfExporter.hide(); return false;", :title => "Close", :class => "close") %>
   </div>
+  Export Data
 </div>
-<div class="well clearfix">
-  <label class="checkbox">
-    <input type="checkbox" id="wf_fld_all" onClick="wfExporter.selectAllFields(this);">
-    Select All
-  </label>
-  <% @wf_filter.model_class.columns.each_with_index do |col, index| %>
-    <label class="checkbox">
-      <input type="checkbox" id="wf_fld_chk_<%=index%>" onClick="wfExporter.selectField(this);" style="width:20px;">
-      <input type="hidden" id="wf_fld_name_<%=index%>" value="<%=col.name%>">
-      <%=col.name.humanize %> ( <%=col.type %> )
-    </label>
-  <% end %>
-  <div style="width: 100%; ">
-  Format: <%= select_tag("wf_export_format_selector", options_for_select(@wf_filter.export_formats,  @wf_filter.format), :style => "width: 100%;" ) %>
-  </div>
 
+<div class="wf_exporter_container">
+
+  <table style="width:100%" cellpadding="0px" cellspacing="0px;">
+    <thead>
+    <tr>
+      <td><input type="checkbox" id="wf_fld_all" onClick="wfExporter.selectAllFields(this);" style="width:20px;"></td>
+      <td>Name</td>
+      <td>Type</td>
+    </tr>
+    </thead>
+    <tbody>
+    <% @wf_filter.model_class.columns.each_with_index do |col, index| %>
+      <tr>
+        <td>
+          <input type="checkbox" id="wf_fld_chk_<%= index %>" onClick="wfExporter.selectField(this);" style="width:20px;"><input type="hidden" id="wf_fld_name_<%= index %>" value="<%= col.name %>">
+        </td>
+        <td><%= col.name %></td>
+        <td><%= col.type %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+
+  <div class="center" style="border-top: 1px solid #ccc; padding-top: 5px; margin-top: 5px;">
+    Format: <%= select_tag("wf_export_format_selector", options_for_select(@wf_filter.export_formats, @wf_filter.format)) %>
+  </div>
   <div class="center">
-      <%=link_to_function("Export".html_safe, "wfExporter.exportFilter()", :class => "btn btn-primary") %>
-      <%=link_to_function("Cancel".html_safe, "wfExporter.hide()", :class => "btn btn-warning") %>
+    <button type="button" class="btn btn-primary btn-xs" onclick="wfExporter.exportFilter()">
+      Export
+    </button>
+    <button type="button" class="btn btn-default btn-xs" onclick="wfExporter.hide()">
+      Cancel
+    </button>
   </div>
 </div>

@@ -1,36 +1,52 @@
-<div>
-  <%= hidden_field_tag(:wf_id, wf_filter.id) %>
-  <%= hidden_field_tag(:wf_type, wf_filter.class.name) %>
-  <%= hidden_field_tag(:wf_dirty, "false") %>
-  <%= hidden_field_tag(:wf_submitted, "false") %>
-  <%= hidden_field_tag(:wf_name, wf_filter.name) %>
+<%= hidden_field_tag(:wf_id, wf_filter.id) %>
+<%= hidden_field_tag(:wf_type, wf_filter.class.name) %>
+<%= hidden_field_tag(:wf_dirty, "false") %>
+<%= hidden_field_tag(:wf_submitted, "false") %>
+<%= hidden_field_tag(:wf_name, wf_filter.name) %>
 
-  <% unless WillFilter::Config.require_filter_extensions? %>
-    <%= hidden_field_tag(:wf_model, wf_filter.model_class_name) %>
+<% unless WillFilter::Config.require_filter_extensions? %>
+  <%= hidden_field_tag(:wf_model, wf_filter.model_class_name) %>
+<% end %>
+
+<%= hidden_field_tag(:wf_export_format, "") %>
+<%= hidden_field_tag(:wf_export_fields, "") %>
+
+<div class="wf_header">
+  <% if wf_filter.show_export_options? %>
+    <div class="end" style="padding-left:3px;">
+      <button type="button" class="btn btn-default btn-xs" onclick="wfExporter.show(this)">
+        Export Data...
+      </button>
+    </div>
   <% end %>
-    
-  <%= hidden_field_tag(:wf_export_format, "") %>
-  <%= hidden_field_tag(:wf_export_fields, "") %>
-</div>
 
-<div class="header clearfix">
-  <div class="pull-right">
-    <%=link_to_function("Toggle Conditions", "wfFilter.toggleDebugger()", :class => 'btn btn-mini') %>
-    <% if wf_filter.show_export_options? %>
-      <%=link_to_function("Export".html_safe, "wfExporter.show(this)", :class => "btn btn-mini") %>
-    <% end %>
-    <% if wf_filter.show_save_options? %>
-      <%=link_to_function("Save".html_safe, "wfFilter.saveFilter()", :class => "btn btn-mini") %>
+  <% if wf_filter.show_save_options? %>
+    <div class="end">
+      <button type="button" class="btn btn-default btn-xs" onclick="wfFilter.saveFilter()">
+        Save As New...
+      </button>
+
       <% if wf_filter.id %>
-        <%=link_to_function("Update".html_safe, "wfFilter.updateFilter()", :class => "btn btn-mini") %>
-        <%=link_to_function("Delete".html_safe, "wfFilter.deleteFilter()", :class => "btn btn-mini") %>
+        <button type="button" class="btn btn-default btn-xs" onclick="wfFilter.updateFilter()">
+          Update
+        </button>
+        <button type="button" class="btn btn-default btn-xs" onclick="wfFilter.deleteFilter()">
+          Delete
+        </button>
       <% end %>
-    <% end %>
-  </div>
-  <div class="pull-left">
-    <% unless wf_filter.saved_filters.empty? %>
-       <%= select_tag(:wf_key, options_for_select(wf_filter.saved_filters, wf_filter.key), {:onChange=>"wfFilter.loadSavedFilter()"}) %>
-    <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <% unless wf_filter.filter_options.empty? %>
+      <%= select_tag(:wf_key, grouped_options_for_select(wf_filter.filter_options, wf_filter.key), {:onChange => "wfFilter.loadSavedFilter()", style: 'width:250px'}) %>
+      <script>
+        $("#wf_key").select2({
+          placeholder: "Select pre-defined or saved filter"
+        }).on("change", function (e) {
+          wfFilter.loadSavedFilter();
+        });
+      </script>
+  <% end %>
   </div>
 </div>
-<div class="clearfix">&nbsp;</div>
