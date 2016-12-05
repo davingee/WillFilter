@@ -30,6 +30,23 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
+class ActiveRecord_Relation
+  
+  def wf_filter=(filter)
+    @wf_filter = filter
+  end
+  
+  def wf_filter
+    @wf_filter
+  end
+  
+	def add_filter_condition(condition_key, operator_key, values = [])
+		sub_filter = wf_filter.dup
+    sub_filter.replace_condition(condition_key, operator_key, values)
+		sub_filter
+	end
+
+end
 class Array
   
   def wf_filter=(filter)

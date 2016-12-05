@@ -705,7 +705,7 @@ module WillFilter
           cond << "<br>&nbsp;&nbsp;&nbsp;<b>#{i})</b>&nbsp;"
           if c.is_a?(Array)
             cond << "["
-            cond << (c.collect{|v| "\"#{v.strip}\""}.join(", "))
+            cond << (c.collect{|v| "\"#{v.to_s.strip}\""}.join(", "))
             cond << "]"
           elsif c.is_a?(Date)
             cond << "\"#{c.strftime("%Y-%m-%d")}\""
@@ -934,8 +934,8 @@ module WillFilter
           recs = process_custom_conditions(recs.all)
           recs = Kaminari.paginate_array(recs)
         end
-
-        recs = recs.page(page).per(per_page)
+        recs = Kaminari.paginate_array(recs.to_a).page(page).per(per_page)
+        # recs = recs.page(page).per(per_page)
         recs.wf_filter = self
         recs
       end
