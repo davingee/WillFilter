@@ -821,7 +821,6 @@ module WillFilter
 
       load_default_filter(key)
       return self unless empty?
-
       filter = WillFilter::Filter.find_by_id(key_or_id.to_i)
       raise WillFilter::FilterException.new("Invalid filter key #{key_or_id.to_s}") if filter.nil?
       filter
@@ -929,15 +928,15 @@ module WillFilter
         inner_joins.each do |inner_join|
           recs = recs.joins(association_name(inner_join))
         end
-
         if custom_conditions?
-          recs = process_custom_conditions(recs.all)
-          recs = Kaminari.paginate_array(recs)
+          recs = process_custom_conditions(recs.to_a)
+          recs = Kaminari.paginate_array(recs).page(page).per(per_page)
+          recs.wf_filter = self
+        else
+          recs.wf_filter = self
+          recs = recs.page(page).per(per_page)
         end
-
-        recs = Kaminari.paginate_array(recs.to_a).page(page).per(per_page)
-        # recs = recs.page(page).per(per_page)
-        recs.wf_filter = self
+        # recs = Kaminari.paginate_array(recs.to_a).page(page).per(per_page)
         recs
       end
     end

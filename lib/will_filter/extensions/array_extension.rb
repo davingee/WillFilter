@@ -30,7 +30,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class ActiveRecord_Relation
+class ActiveRecord::Relation
   
   def wf_filter=(filter)
     @wf_filter = filter
