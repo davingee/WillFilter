@@ -898,25 +898,15 @@ module WillFilter
       end
     end
 
-    def process_custom_conditions(objects)
-      filtered = []
-      objects.each do |obj|
-        condition_flags = []
-
-        0.upto(size - 1) do |index|
-          condition = condition_at(index)
-          next unless custom_condition?(condition)
-          condition_flags << custom_condition_met?(condition, obj)
-        end
-
-        if condition_flags.size > 0
-          next if match.to_s == "all" and condition_flags.include?(false)
-          next unless condition_flags.include?(true)
-        end
-
-        filtered << obj
+    def process_custom_conditions
+      hash = {}
+      0.upto(size - 1) do |index|
+        condition = condition_at(index)
+        next unless custom_condition?(condition)
+        next unless self.class == AffiliateDataFilter
+        hash[:rainmaker_campaign_id] = eval(condition.container.values.first)
       end
-      filtered
+      hash
     end
 
     def results
@@ -924,19 +914,13 @@ module WillFilter
       the_sql_conditions = nil if the_sql_conditions.reject{|d| d.blank? }.blank?
       @results ||= begin
         handle_empty_filter!
-        recs = model_class.where(the_sql_conditions).order(order_clause)
+        @custom_hash = process_custom_conditions if custom_conditions?
+        @custom_query = @custom_hash.blank? ? nil : @custom_hash
+        recs = model_class.where(the_sql_conditions).where(@custom_query).order(order_clause).page(page).per(per_page)
         inner_joins.each do |inner_join|
           recs = recs.joins(association_name(inner_join))
         end
-        if custom_conditions?
-          recs = process_custom_conditions(recs.to_a)
-          recs = Kaminari.paginate_array(recs).page(page).per(per_page)
-          recs.wf_filter = self
-        else
-          recs.wf_filter = self
-          recs = recs.page(page).per(per_page)
-        end
-        # recs = Kaminari.paginate_array(recs.to_a).page(page).per(per_page)
+        recs.wf_filter = self
         recs
       end
     end

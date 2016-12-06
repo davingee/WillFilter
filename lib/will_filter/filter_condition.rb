@@ -35,10 +35,10 @@ module WillFilter
     attr_accessor :filter, :key, :operator, :container
   
     def initialize(filter, key, operator, container_class, values)
-      @filter     = filter
-      @key        = key
-      @operator   = operator
-      @container  = WillFilter::Config.containers[container_class].constantize.new(filter, self, operator, values)
+      @filter       = filter
+      @key          = key
+      @operator     = operator
+      @container    = WillFilter::Config.containers[container_class].constantize.new(filter, self, operator, values)
     end
   
     def validate
