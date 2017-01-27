@@ -1,16 +1,18 @@
 <%= will_filter_scripts_tag %>
-
-<%= form_tag({}, {:method => :get, :name => 'wf_form', :id => 'wf_form', :class => 'wf_form'}) do %>
-
-  <div class="wf_container">
-
-    <div id="wf_filter_conditions" class="wf_conditions">
+<%= form_tag({}, {:method => :get, :name => 'wf_form', :id => 'wf_form', :class => 'wf_form', style: "margin: 0 10% 0 10%;"}) do %>
+  <div class="wf_container row">
+    <div id="wf_filter_conditions" class="wf_conditions large-12 columns">
       <%= render :partial => '/will_filter/filter/conditions', :locals => {:wf_filter => wf_filter} %>
     </div>
 
-    <div class="wf_footer">
+    <div class="wf_footer large-12 columns">
       <%= render :partial => '/will_filter/filter/conditions_footer', :locals => {:wf_filter => wf_filter} %>
     </div>
 
+    <div class="wf_footer large-12 columns">
+    <button type="button" class="button btn btn-primary btn-xs" onclick="wfFilter.submit()">
+      Submit
+    </button>
+    </div>
   </div>
 <% end %>

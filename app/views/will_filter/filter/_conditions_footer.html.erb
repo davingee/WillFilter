@@ -11,22 +11,17 @@
     <%= select_tag(:wf_per_page, options_for_select(wf_filter.per_page_options, wf_filter.per_page.to_s), {:onChange => "markDirty()"}) %>
   <% end %>
 
-  &nbsp;&nbsp;
-  <button type="button" class="btn btn-primary btn-xs" onclick="wfFilter.submit()">
-    Submit
-  </button>
 </div>
 
-<div>
-  <button type="button" class="btn btn-default btn-xs" onclick="wfFilter.addCondition()">
-    + Add Condition
-  </button>
-  <button type="button" class="btn btn-default btn-xs" onclick="wfFilter.removeAllConditions()">
-    Clear All
-  </button>
+<button type="button" class="button btn btn-default btn-xs" onclick="wfFilter.addCondition()">
+  + Add Condition
+</button>
+<button type="button" class="alert button btn btn-default btn-xs" onclick="wfFilter.removeAllConditions()">
+  Clear All
+</button>
 
-  &nbsp;&nbsp;
-  <span id="wf_loader" class="spinner" style="display:none;">
-    <%= image_tag 'will_filter/loading.gif', style: 'height: 15px;' %>
-  </span>
-</div>
+&nbsp;&nbsp;
+<span id="wf_loader" class="spinner" style="display:none;">
+  <%= image_tag 'will_filter/loading.gif', style: 'height: 15px;' %>
+</span>
+
